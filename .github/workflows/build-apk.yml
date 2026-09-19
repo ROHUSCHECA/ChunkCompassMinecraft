@@ -19,7 +19,7 @@ jobs:
       - name: Descomprimir proyecto
         run: |
           mkdir unpacked
-          unzip -q ChunkCompassMinecraft_2.0.zip -d unpacked
+          unzip -q - ChunkCompassMinecraft_2.0 (1).zip -d unpacked
           echo "Contenido:"
           find unpacked -maxdepth 3 -type f | head -50
 
