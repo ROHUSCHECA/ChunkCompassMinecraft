@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'ChunkCompassMinecraft_2.0 (1).zip''
+      - 'ChunkCompassMinecraft_2.0 (1).zip'
       - '.github/workflows/build-apk.yml'
 
 jobs:
@@ -12,22 +12,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Descargar proyecto
         uses: actions/checkout@v6
 
       - name: Descomprimir proyecto
         run: |
-          mkdir unpacked
-          unzip -q - ChunkCompassMinecraft_2.0 (1).zip -d unpacked
-          echo "Contenido:"
-          find unpacked -maxdepth 3 -type f | head -50
+          mkdir -p unpacked
+          unzip -q 'ChunkCompassMinecraft_2.0 (1).zip' -d unpacked
+          echo "Contenido del ZIP:"
+          find unpacked -maxdepth 4 -type f | head -100
 
       - name: Encontrar proyecto Android
         id: project
         run: |
           PROJECT=$(find unpacked -name settings.gradle -type f -print -quit | xargs dirname)
-          echo "PROJECT=$PROJECT"
+          echo "Proyecto encontrado en: $PROJECT"
           echo "project=$PROJECT" >> "$GITHUB_OUTPUT"
 
       - name: Instalar Java 17
