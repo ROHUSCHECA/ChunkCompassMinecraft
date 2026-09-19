@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - - 'ChunkCompassMinecraft_2.0 (1).zip'
+      - 'ChunkCompassMinecraft_2.0 (1).zip''
       - '.github/workflows/build-apk.yml'
 
 jobs:
