@@ -1,0 +1,53 @@
+name: Compilar Chunk Compass Minecraft
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'ChunkCompassMinecraft_2.0.zip'
+      - '.github/workflows/build-apk.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Descargar proyecto
+        uses: actions/checkout@v6
+
+      - name: Descomprimir proyecto
+        run: |
+          mkdir unpacked
+          unzip -q ChunkCompassMinecraft_2.0.zip -d unpacked
+          echo "Contenido:"
+          find unpacked -maxdepth 3 -type f | head -50
+
+      - name: Encontrar proyecto Android
+        id: project
+        run: |
+          PROJECT=$(find unpacked -name settings.gradle -type f -print -quit | xargs dirname)
+          echo "PROJECT=$PROJECT"
+          echo "project=$PROJECT" >> "$GITHUB_OUTPUT"
+
+      - name: Instalar Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Instalar Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          gradle-version: '8.9'
+
+      - name: Compilar APK
+        run: |
+          cd "${{ steps.project.outputs.project }}"
+          gradle assembleDebug --stacktrace
+
+      - name: Guardar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ChunkCompassMinecraft-APK
+          path: ${{ steps.project.outputs.project }}/app/build/outputs/apk/debug/app-debug.apk
